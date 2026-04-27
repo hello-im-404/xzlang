@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XZLANG Documentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:        #080c12;
+            --sidebar:   #0d1320;
+            --surface:   #111827;
+            --surface2:  #1a2236;
+            --border:    #1e2d45;
+            --border2:   #243352;
+            --text:      #cdd6f4;
+            --muted:     #6b7fa3;
+            --accent:    #4f9cf9;
+            --accent2:   #6fc3ff;
+            --green:     #3ddc84;
+            --purple:    #c084fc;
+            --orange:    #fb923c;
+            --red:       #f87171;
+            --yellow:    #fbbf24;
+            --code-bg:   #050810;
+
+            --kw:   #f97171;
+            --ty:   #fb923c;
+            --str:  #7dd3fc;
+            --cmt:  #4a5a7a;
+            --fn:   #c084fc;
+            --num:  #86efac;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* sidebar */
+        aside {
+            width: 260px;
+            background: var(--sidebar);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .sidebar-logo {
+            padding: 1.6rem 1.5rem 1.2rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .logo-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: var(--accent2);
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1;
+        }
+        .logo-sub {
+            font-size: 0.72rem;
+            color: var(--muted);
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+        .logo-badge {
+            display: inline-block;
+            margin-top: 10px;
+            background: rgba(79, 156, 249, 0.12);
+            border: 1px solid rgba(79, 156, 249, 0.3);
+            color: var(--accent);
+            font-size: 0.68rem;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 2px 8px;
+            border-radius: 20px;
+            letter-spacing: 1px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        .nav-group-label {
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted);
+            padding: 0.5rem 0.5rem 0.3rem;
+            margin-top: 0.5rem;
+        }
+        nav ul { list-style: none; padding: 0; margin: 0 0 0.5rem; }
+        nav li { margin-bottom: 2px; }
+        nav a {
+            color: var(--muted);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 0.5rem 0.75rem;
+            border-radius: 7px;
+            transition: all 0.18s;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        nav a .icon { font-size: 1rem; flex-shrink: 0; }
+        nav a:hover { background: var(--surface); color: var(--text); }
+        nav a.active {
+            background: rgba(79, 156, 249, 0.14);
+            color: var(--accent2);
+            border: 1px solid rgba(79, 156, 249, 0.25);
+        }
+
+        .sidebar-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.72rem;
+            color: var(--muted);
+        }
+
+        /* main */
+        main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 3rem 4rem 4rem;
+            background: var(--bg);
+        }
+
+        section {
+            display: none;
+            max-width: 860px;
+            animation: fadeUp 0.3s ease both;
+        }
+        section.visible { display: block; }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* typography */
+        h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text);
+            margin: 0 0 0.4rem;
+            line-height: 1.2;
+        }
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, var(--border2), transparent);
+            margin: 0.6rem 0 1.8rem;
+        }
+        h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--accent2);
+            margin: 2.2rem 0 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        h3::before {
+            content: '';
+            width: 3px;
+            height: 1em;
+            background: var(--accent);
+            border-radius: 2px;
+            display: inline-block;
+        }
+        p {
+            line-height: 1.8;
+            font-size: 0.95rem;
+            color: var(--muted);
+            margin: 0.8rem 0;
+        }
+        strong { color: var(--text); font-weight: 600; }
+
+        ul, ol {
+            color: var(--muted);
+            font-size: 0.95rem;
+            line-height: 1.9;
+            padding-left: 1.4rem;
+        }
+        li { margin-bottom: 4px; }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+            background: var(--surface2);
+            border: 1px solid var(--border2);
+            padding: 1px 6px;
+            border-radius: 4px;
+            color: var(--accent2);
+        }
+
+        /* code blocks */
+        .code-block {
+            margin: 1.5rem 0;
+            border-radius: 10px;
+            border: 1px solid var(--border2);
+            overflow: hidden;
+        }
+        .code-header {
+            background: var(--surface);
+            padding: 8px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .code-lang {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--muted);
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .code-lang::before {
+            content: '';
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            opacity: 0.7;
+        }
+        .copy-btn {
+            background: none;
+            border: 1px solid var(--border2);
+            color: var(--muted);
+            font-size: 0.72rem;
+            font-family: 'Space Grotesk', sans-serif;
+            padding: 3px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .copy-btn.copied { color: var(--green); border-color: var(--green); }
+
+        pre {
+            background: var(--code-bg);
+            padding: 1.3rem 1.5rem;
+            margin: 0;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88rem;
+            line-height: 1.7;
+        }
+        pre code { background: none; border: none; padding: 0; color: inherit; font-size: inherit; }
+
+        .kw  { color: var(--kw); }
+        .ty  { color: var(--ty); }
+        .str { color: var(--str); }
+        .cmt { color: var(--cmt); font-style: italic; }
+        .fn  { color: var(--fn); }
+        .num { color: var(--num); }
+
+        /* callouts */
+        .tip {
+            background: rgba(79, 156, 249, 0.07);
+            border-left: 3px solid var(--accent);
+            padding: 1rem 1.2rem;
+            margin: 1.8rem 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+        .tip strong { color: var(--accent2); }
+
+        /* hero block */
+        .hero {
+            background: linear-gradient(135deg, rgba(79,156,249,0.06) 0%, transparent 60%);
+            border: 1px solid var(--border2);
+            border-radius: 14px;
+            padding: 2.2rem 2.4rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: 'XZL';
+            position: absolute;
+            right: -10px; top: -20px;
+            font-size: 8rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: rgba(79, 156, 249, 0.04);
+            pointer-events: none;
+            line-height: 1;
+        }
+        .hero h2 { font-size: 1.6rem; margin: 0 0 0.5rem; }
+        .hero p { margin: 0; font-size: 0.95rem; }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .feature-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.2rem;
+            transition: border-color 0.2s;
+        }
+        .feature-card:hover { border-color: var(--border2); }
+        .feature-icon { font-size: 1.4rem; margin-bottom: 0.5rem; }
+        .feature-card h4 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 0 0 0.3rem;
+        }
+        .feature-card p { font-size: 0.8rem; margin: 0; line-height: 1.6; }
+
+        /* playground */
+        .playground {
+            margin-top: 1rem;
+            border: 1px solid var(--border2);
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--code-bg);
+        }
+        .pg-header {
+            background: var(--surface);
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .pg-header-left {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            color: var(--muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .dot-r { background: #f87171; }
+        .dot-y { background: #fbbf24; }
+        .dot-g { background: #4ade80; }
+        .pg-body {
+            display: flex;
+            height: 320px;
+        }
+        #pg-code {
+            flex: 1;
+            background: var(--code-bg);
+            color: #c8d4f0;
+            border: none;
+            padding: 1.2rem 1.4rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.84rem;
+            line-height: 1.7;
+            resize: none;
+            outline: none;
+        }
+        #pg-out {
+            width: 280px;
+            background: #020408;
+            color: var(--green);
+            padding: 1.2rem 1.4rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            line-height: 1.7;
+            border-left: 1px solid var(--border);
+            overflow-y: auto;
+        }
+        .pg-out-label {
+            color: var(--muted);
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+        .pg-footer {
+            background: var(--surface);
+            padding: 10px 16px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .pg-btn {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 7px 18px;
+            cursor: pointer;
+            border-radius: 7px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: 0.5px;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .pg-btn:hover { background: var(--accent2); transform: translateY(-1px); }
+        .pg-btn:active { transform: translateY(0); }
+        .pg-clear {
+            background: none;
+            border: 1px solid var(--border2);
+            color: var(--muted);
+            padding: 7px 14px;
+            cursor: pointer;
+            border-radius: 7px;
+            font-size: 0.82rem;
+            font-family: 'Space Grotesk', sans-serif;
+            transition: all 0.15s;
+        }
+        .pg-clear:hover { color: var(--text); border-color: var(--border2); }
+        .pg-status { font-size: 0.75rem; color: var(--muted); margin-left: auto; font-family: 'JetBrains Mono', monospace; }
+
+        /* table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            margin: 1.2rem 0;
+        }
+        th {
+            background: var(--surface);
+            color: var(--text);
+            font-weight: 600;
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border2);
+            font-size: 0.78rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        td {
+            padding: 9px 14px;
+            border-bottom: 1px solid var(--border);
+            color: var(--muted);
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(255,255,255,0.015); }
+        td code { font-size: 0.82rem; }
+
+        /* scrollbar */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+    </style>
+</head>
+<body>
+
+<aside>
+    <div class="sidebar-logo">
+        <div class="logo-title">XZLANG</div>
+        <div class="logo-sub">SYSTEMS PROGRAMMING LANGUAGE</div>
+        <span class="logo-badge">v0.4-wip</span>
+    </div>
+
+    <div class="sidebar-nav">
+        <div class="nav-group-label">Getting Started</div>
+        <nav>
+            <ul>
+                <li><a href="#home" class="active"><span class="icon"></span> Overview</a></li>
+            </ul>
+        </nav>
+
+        <div class="nav-group-label">Language</div>
+        <nav>
+            <ul>
+                <li><a href="#variables"><span class="icon"></span> Variables</a></li>
+                <li><a href="#functions"><span class="icon">️</span> Functions</a></li>
+                <li><a href="#control"><span class="icon"></span> Control Flow</a></li>
+                <li><a href="#arrays"><span class="icon">️</span> Arrays</a></li>
+                <li><a href="#pointers"><span class="icon"></span> Pointers</a></li>
+            </ul>
+        </nav>
+
+        <div class="nav-group-label">Tooling</div>
+        <nav>
+            <ul>
+                <li><a href="#libraries"><span class="icon"></span> Libraries</a></li>
+                <li><a href="#cli"><span class="icon"></span> CLI</a></li>
+                <li><a href="#playground"><span class="icon"></span> Playground</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="sidebar-footer">
+        x86_64 · no GC · Linux
+    </div>
+</aside>
+
+<main>
+
+    <!-- overview -->
+    <section id="home">
+        <div class="hero">
+            <h2>XZLANG Documentation</h2>
+            <p><strong>XZLANG</strong> is a statically typed systems language that compiles to x86_64 assembly via NASM. No virtual machine, no garbage collector, no runtime.</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"></div>
+                <h4>Native compilation</h4>
+                <p>Compiles directly to x86_64 instructions. Output is a stripped ELF binary.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">:</div>
+                <h4>Type syntax</h4>
+                <p>Types precede names, separated by a colon: <code>i64:x</code>.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"></div>
+                <h4>No runtime</h4>
+                <p>No garbage collector. No VM. Memory management is explicit.</p>
+            </div>
+        </div>
+
+        <div class="tip">
+            <strong>Start here:</strong> See the <strong>Variables</strong> section for a quick overview of the type system, then move to <strong>Functions</strong>.
+        </div>
+    </section>
+
+    <!-- variables -->
+    <section id="variables">
+        <h2>Variables</h2>
+        <div class="section-divider"></div>
+        <p>Variables are declared with a colon separating the type from the name. Every statement must end with <code>.</code></p>
+
+        <div class="code-block">
+            <div class="code-header">
+                <span class="code-lang">xzlang · variable declarations</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+            </div>
+            <pre><span class="ty">i64</span>:age = <span class="num">25</span>.       <span class="cmt">; 64-bit integer</span>
+<span class="ty">str</span>:msg = <span class="str">"Hello"</span>.    <span class="cmt">; string</span>
+<span class="ty">f64</span>:pi  = <span class="num">3.14</span>.      <span class="cmt">; 64-bit float</span>
+<span class="ty">bool</span>:ok = <span class="kw">true</span>.      <span class="cmt">; boolean</span></pre>
+        </div>
+
+        <h3>Type reference</h3>
+        <table>
+            <thead><tr><th>Type</th><th>Size</th><th>Description</th><th>Example</th></tr></thead>
+            <tbody>
+                <tr><td><code>i64</code></td><td>8 bytes</td><td>Signed 64-bit integer</td><td><code>i64:x = 42.</code></td></tr>
+                <tr><td><code>f64</code></td><td>8 bytes</td><td>64-bit floating point</td><td><code>f64:y = 3.14.</code></td></tr>
+                <tr><td><code>str</code></td><td>—</td><td>String</td><td><code>str:s = "ok".</code></td></tr>
+                <tr><td><code>bool</code></td><td>1 byte</td><td>Boolean</td><td><code>bool:b = true.</code></td></tr>
+                <tr><td><code>ptr&lt;T&gt;</code></td><td>8 bytes</td><td>Pointer to type T</td><td><code>ptr&lt;i64&gt;:p.</code></td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- functions -->
+    <section id="functions">
+        <h2>Functions</h2>
+        <div class="section-divider"></div>
+        <p>Parameters are passed in curly braces <code>{}</code>. The function body is enclosed in parentheses <code>()</code>.</p>
+
+        <div class="code-block">
+            <div class="code-header">
+                <span class="code-lang">xzlang · function definition and call</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+            </div>
+            <pre><span class="ty">i64</span> <span class="fn">calculate</span>{<span class="ty">i64</span>:a, <span class="ty">i64</span>:b}(
+    <span class="kw">ret</span> a + b * <span class="num">2</span>.
+)
+
+<span class="ty">i64</span> <span class="fn">start</span>{<span class="ty">ntg</span>}(
+    <span class="ty">i64</span>:res = <span class="fn">calculate</span>{<span class="num">10</span>, <span class="num">5</span>}.
+    <span class="fn">prms</span>{<span class="str">"Result: ~i"</span>, ~res}.
+    <span class="kw">ret</span> <span class="num">0</span>.
+)</pre>
+        </div>
+
+        <div class="tip">
+            <code>start</code> is the program entry point, equivalent to <code>main</code> in C. The <code>ntg</code> parameter means "no type guard" — the argument is untyped.
+        </div>
+    </section>
+
+    <!-- control flow -->
+    <section id="control">
+        <h2>Control Flow</h2>
+        <div class="section-divider"></div>
+
+        <h3>If / Else</h3>
+        <p>Conditions go inside <code>{}</code>. The block body goes inside <code>()</code>.</p>
+
+        <div class="code-block">
+            <div class="code-header">
+                <span class="code-lang">xzlang · conditionals</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+            </div>
+            <pre><span class="kw">if</span>{x == <span class="num">10</span>}(
+    <span class="fn">prms</span>{<span class="str">"ten"</span>}.
+) <span class="kw">else</span> (
+    <span class="fn">prms</span>{<span class="str">"not ten"</span>}.
+)</pre>
+        </div>
+
+        <h3>Loops</h3>
+        <p>XZLANG supports <code>for</code> and <code>while</code>. Arguments in <code>for</code> follow the standard init, condition, post pattern.</p>
+
+        <div class="code-block">
+            <div class="code-header">
+                <span class="code-lang">xzlang · for loop</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+            </div>
+            <pre><span class="kw">for</span>{<span class="ty">i64</span>:i = <span class="num">0</span>, i &lt; <span class="num">5</span>, ++i}(
+    <span class="fn">prms</span>{<span class="str">"step ~i"</span>, ~i}.
+)</pre>
+        </div>
+
+        <h3>Ternary</h3>
+        <p>Syntax: <code>condition => if_true | if_false</code>.</p>
+
+        <div class="code-block">
+            <div class="code-header">
+                <span class="code-lang">xzlang · ternary operator</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+            </div>
+            <pre><span class="ty">i64</span>:val = <span class="num">10</span> > <span class="num">5</span> => <span class="num">999</span> | <span class="num">111</span>.
+<span class="fn">prms</span>{<span class="str">"Result: ~i"</span>, ~val}.</pre>
+        </div>
+    </section>
+
+    <!-- arrays -->
+    <section id="arrays">
+        <h2>Arrays</h2>
+        <div class="section-divider"></div>
+        <p>Fixed-size arrays. Elements are zero-indexed.</p>
+
+        <div class="code-block">
+            <div class="code-header">
+                <span class="code-lang">xzlang · arrays</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+            </div>
+            <pre><span class="cmt">; initializer list</span>
+<span class="ty">i64</span>:arr = [<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>].
+<span class="fn">prms</span>{<span class="str">"arr[1]: ~i"</span>, ~arr[<span class="num">1</span>]}.
+
+<span class="cmt">; fixed-size uninitialized array</span>
+<span class="ty">i64</span>:arr2[<span class="num">5</span>].
+arr2[<span class="num">0</span>] = <span class="num">777</span>.</pre>
+        </div>
+
+        <div class="tip">
+            Out-of-bounds access is a compile-time error when the array size is statically known.
+        </div>
+    </section>
+
+    <!-- pointers -->
+    <section id="pointers">
+        <h2>Pointers</h2>
+        <div class="section-divider"></div>
+        <p>Pointers give direct access to memory addresses.</p>
+
+        <table>
+            <thead><tr><th>Syntax</th><th>Meaning</th></tr></thead>
+            <tbody>
+                <tr><td><code>addr:x</code></td><td>Take the address of variable <code>x</code></td></tr>
+                <tr><td><code>^p</code></td><td>Dereference pointer <code>p</code></td></tr>
+                <tr><td><code>~p</code></td><td>Print address via <code>prms</code></td></tr>
+            </tbody>
+        </table>
+
+        <div class="code-block">
+            <div class="code-header">
+                <span class="code-lang">xzlang · pointers</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+            </div>
+            <pre><span class="ty">i64</span>:val = <span class="num">100</span>.
+<span class="ty">ptr&lt;i64&gt;</span>:p = <span class="kw">addr:</span>val.
+
+<span class="fn">prms</span>{<span class="str">"address: ~p"</span>, ~p}.
+<span class="fn">prms</span>{<span class="str">"value:   ~i"</span>, ^p}.</pre>
+        </div>
+
+        <h3>Heap allocation</h3>
+        <p>Use <code>gain:</code> to allocate and <code>drop:</code> to free. There is no garbage collector — memory leaks are the programmer's responsibility.</p>
+
+        <div class="code-block">
+            <div class="code-header">
+                <span class="code-lang">xzlang · heap allocation</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+            </div>
+            <pre><span class="ty">ptr&lt;i64&gt;</span>:p = <span class="kw">gain:</span><span class="ty">i64</span>[<span class="num">3</span>].
+p[<span class="num">0</span>] = <span class="num">123</span>.
+
+<span class="kw">drop:</span>p.</pre>
+        </div>
+    </section>
+
+    <!-- libraries -->
+    <section id="libraries">
+        <h2>Libraries</h2>
+        <div class="section-divider"></div>
+        <p>Libraries are imported with the <code>using</code> keyword. Standard libraries are located in <code>lib/</code>.</p>
+        <p>Multiple libraries can be imported in a single statement:</p>
+
+        <div class="code-block">
+            <div class="code-header">
+                <span class="code-lang">xzlang · imports</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+            </div>
+            <pre><span class="kw">using</span>{<span class="str">"tml"</span>, <span class="str">"net"</span>}.  <span class="cmt">; multiple at once</span>
+
+<span class="cmt">; or separately:</span>
+<span class="kw">using</span>{<span class="str">"tml"</span>}.
+<span class="kw">using</span>{<span class="str">"net"</span>}.</pre>
+        </div>
+
+        <h3>Standard libraries</h3>
+        <table>
+            <thead><tr><th>Library</th><th>Description</th><th>Functions</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><code>tml</code></td>
+                    <td>Basic I/O</td>
+                    <td><code>prms</code>, <code>get</code></td>
+                </tr>
+                <tr>
+                    <td><code>net</code></td>
+                    <td>TCP/IP networking</td>
+                    <td><code>connect</code>, <code>listen</code>, <code>send</code></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- cli -->
+    <section id="cli">
+        <h2>CLI</h2>
+        <div class="section-divider"></div>
+        <p>The compiler accepts the following commands and flags. By default, <code>build</code> runs <code>strip</code> on the output binary.</p>
+
+        <div class="code-block">
+            <div class="code-header">
+                <span class="code-lang">shell · commands</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+            </div>
+            <pre><span class="cmt"># compile to binary</span>
+./xzlang build main.xzl -o my_app
+
+<span class="cmt"># run via interpreter</span>
+./xzlang run main.xzl
+
+<span class="cmt"># print generated assembly</span>
+./xzlang build main.xzl --emit-asm</pre>
+        </div>
+
+        <h3>Flags</h3>
+        <table>
+            <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr><td><code>-o &lt;name&gt;</code></td><td>Output binary name</td></tr>
+                <tr><td><code>--emit-asm</code></td><td>Print generated x86_64 assembly</td></tr>
+                <tr><td><code>--no-strip</code></td><td>Keep debug symbols in the output</td></tr>
+                <tr><td><code>--verbose</code></td><td>Verbose compilation log</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- playground -->
+    <section id="playground">
+        <h2>Playground</h2>
+        <div class="section-divider"></div>
+        <p>Write and run XZLANG code in the browser. Execution is simulated — this is not a real compiler.</p>
+
+        <div class="playground">
+            <div class="pg-header">
+                <div class="pg-header-left">
+                    <div class="dot dot-r"></div>
+                    <div class="dot dot-y"></div>
+                    <div class="dot dot-g"></div>
+                    &nbsp; main.xzl
+                </div>
+            </div>
+            <div class="pg-body">
+                <textarea id="pg-code" spellcheck="false">using{"tml"}.
+
+i64 start{ntg}(
+    str:hello = "Welcome to XZLANG!".
+    prms{"Message: ~s", ~hello}.
+
+    for{i64:i=0, i<3, ++i}(
+        prms{"Counter: ~i", ~i}.
+    )
+    ret 0.
+)</textarea>
+                <div id="pg-out"><div class="pg-out-label">OUTPUT</div><span id="pg-out-text" style="color:var(--muted)">Press RUN to execute...</span></div>
+            </div>
+            <div class="pg-footer">
+                <button class="pg-btn" onclick="runSim()">▶ RUN</button>
+                <button class="pg-clear" onclick="clearOut()"> Clear</button>
+                <span class="pg-status" id="pg-status"></span>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<script>
+    // navigation
+    const links    = document.querySelectorAll('nav a');
+    const sections = document.querySelectorAll('section');
+
+    function showSection(hash) {
+        const id = (hash || '#home').replace('#', '');
+        const target = document.getElementById(id) || document.getElementById('home');
+
+        sections.forEach(s => s.classList.remove('visible'));
+        links.forEach(l => l.classList.remove('active'));
+
+        target.classList.add('visible');
+
+        target.style.animation = 'none';
+        target.offsetHeight;
+        target.style.animation = '';
+
+        const activeLink = document.querySelector(`nav a[href="#${target.id}"]`);
+        if (activeLink) activeLink.classList.add('active');
+
+        document.querySelector('main').scrollTop = 0;
+    }
+
+    links.forEach(link => {
+        link.addEventListener('click', e => {
+            e.preventDefault();
+            const hash = link.getAttribute('href');
+            history.pushState(null, '', hash);
+            showSection(hash);
+        });
+    });
+
+    window.addEventListener('popstate', () => showSection(location.hash));
+    showSection(location.hash || '#home');
+
+    // copy button
+    function copyCode(btn) {
+        const pre = btn.closest('.code-block').querySelector('pre');
+        navigator.clipboard.writeText(pre.innerText).then(() => {
+            btn.textContent = 'copied!';
+            btn.classList.add('copied');
+            setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 2000);
+        });
+    }
+
+    // playground run simulation
+    function runSim() {
+        const code   = document.getElementById('pg-code').value;
+        const outEl  = document.getElementById('pg-out-text');
+        const status = document.getElementById('pg-status');
+
+        outEl.style.color = 'var(--muted)';
+        outEl.innerHTML   = 'Compiling...';
+        status.textContent = '';
+
+        const t0 = Date.now();
+
+        setTimeout(() => {
+            const lines = [];
+
+            const vars = {};
+            const varMatches = code.matchAll(/str:(\w+)\s*=\s*"([^"]*)"\./g);
+            for (const m of varMatches) vars[m[1]] = m[2];
+
+            const i64Matches = code.matchAll(/i64:(\w+)\s*=\s*(\d+)\./g);
+            for (const m of i64Matches) vars[m[1]] = parseInt(m[2]);
+
+            const forMatch = code.match(/for\{[^,]+,\s*\w+\s*<\s*(\d+),/);
+            const forLimit = forMatch ? parseInt(forMatch[1]) : null;
+
+            const forBlockMatch = code.match(/for\{[^)]+\}\(([\s\S]*?)\)/);
+            let forPrms = [];
+            if (forBlockMatch) {
+                const forBody = forBlockMatch[1];
+                const fpm = forBody.matchAll(/prms\{"([^"]*)"(?:,\s*~?(\w+))?\}/g);
+                for (const fp of fpm) forPrms.push({ fmt: fp[1], varName: fp[2] });
+            }
+
+            const allPrms = [...code.matchAll(/prms\{"([^"]*)"(?:,\s*~?(\w+))?\}/g)];
+
+            for (const pm of allPrms) {
+                const fmt     = pm[1];
+                const varName = pm[2];
+                const isInFor = forPrms.some(fp => fp.fmt === fmt && fp.varName === varName);
+
+                if (isInFor && forLimit !== null) {
+                    for (let i = 0; i < forLimit; i++) {
+                        let text = fmt.replace('~i', String(i)).replace('~s', vars[varName] ?? '').replace('~p', '0x7ffd1234');
+                        lines.push(text);
+                    }
+                } else {
+                    let val = varName ? (vars[varName] ?? varName) : '';
+                    let text = fmt.replace('~s', val).replace('~i', val).replace('~p', '0x' + Math.floor(Math.random() * 0xffffff).toString(16));
+                    lines.push(text);
+                }
+            }
+
+            const elapsed = Date.now() - t0;
+            outEl.style.color = 'var(--green)';
+            outEl.innerHTML = lines.map(l => `<div>${l}</div>`).join('');
+            outEl.innerHTML += `<div style="color:var(--muted);margin-top:12px">--- exit code 0 (${elapsed}ms) ---</div>`;
+            status.textContent = ` OK · ${elapsed}ms`;
+            status.style.color = 'var(--green)';
+        }, 500);
+    }
+
+    // TODO: add clear animation
+    function clearOut() {
+        document.getElementById('pg-out-text').innerHTML = '<span style="color:var(--muted)">Press RUN to execute...</span>';
+        document.getElementById('pg-status').textContent = '';
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+i64 abs{i64:x}(
+    ret x < 0 => 0 - x | x.
+)
+
+i64 max{i64:a, i64:b}(
+    ret a > b => a | b.
+)
+
+i64 min{i64:a, i64:b}(
+    ret a < b => a | b.
+)
+
+i64 pow{i64:base, i64:exp}(
+    if{exp == 0}(
+        ret 1.
+    )
+    
+    i64:res = 1.
+    for{i64:i = 0, i < exp, ++i}(
+        res = res * base.
+    )
+    
+    ret res.
+)
+
+i64 fact{i64:n}(
+    if{n <= 1}(
+        ret 1.
+    )
+    
+    i64:res = 1.
+    for{i64:i = 2, i <= n, ++i}(
+        res = res * i.
+    )
+    
+    ret res.
+)
+
+bool is_even{i64:n}(
+    i64:half = n / 2.
+    ret half * 2 == n.
+)
+
+bool is_odd{i64:n}(
+    i64:half = n / 2.
+    ret half * 2 != n.
+)

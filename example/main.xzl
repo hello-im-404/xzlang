@@ -1,0 +1,67 @@
+; This file is just an idea of what the syntax should look like, 
+; read docs/index.html for the actual syntax.
+
+; <- comment
+
+; . end of line, like ; in C.
+
+bool. ; boolean
+
+ntg. ; nothing (void type)
+
+i64. ; signed 64-bit integer
+i32. ; signed 32-bit integer
+i16. ; signed 16-bit integer
+
+chr. ; char
+
+str. ; string 
+
+f64. ; double-precision floating point
+f32. ; single-precision floating point
+
+
+i64:val.
+(ch64):val. ; casting(maybe)
+
+i64:arr = [1, 2, 3, 4, 5]. ; array. 
+i64:arr[5]. 
+
+f64:num = 3.14. ; float number. 
+
+ret. ; return
+
+i64 check_alive{bool:isalive}(
+    if{isalive == true}(
+        prms{"alive!"}.
+        ret true.
+    ) else if{isalive == false}(
+        prms{"died!"}.
+        ret false.
+    )
+    ret false.
+)
+
+
+i64 start{i64:argc, ch64:argv}  ; start is an analog main function
+(
+    i64:integer.
+    chr:char.
+    str:string.
+
+    prms{test}.               ; print variable
+    prms{"~s = 15", ~test}.  ; ~s = string, ~i = integer, ~f = float, ~c = char
+
+    ;;;;;;;;;;; get function
+
+    get{integer}.
+    get{char}.
+    get{string}.
+
+    ;;;;;;;;;;;
+
+    bool:status = true.
+
+    ret 0.
+)
+

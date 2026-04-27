@@ -1,0 +1,41 @@
+i64 net_socket{ntg}(
+    ret syscall{41, 2, 1, 0}.
+)
+
+i64 net_bind{i64:fd, i64:port}(
+    ptr<i64>:s_addr = gain:i64[2].
+
+    i64:p1 = port / 256.
+    i64:p2 = port - p1 * 256.
+    i64:port_sw = p2 * 256 + p1.
+
+    i64:addr_val = 2 + port_sw * 65536.
+    ^s_addr = addr_val.
+    
+    ptr<i64>:addr_part2 = s_addr + 8.
+    ^addr_part2 = 0.
+
+    i64:res = syscall{49, fd, s_addr, 16}.
+    drop:s_addr.
+    ret res.
+)
+
+i64 net_listen{i64:fd, i64:backlog}(
+    ret syscall{50, fd, backlog}.
+)
+
+i64 net_accept{i64:fd}(
+    ret syscall{43, fd, 0, 0}.
+)
+
+i64 net_send{i64:fd, str:msg, i64:len}(
+    ret syscall{1, fd, msg, len}.
+)
+
+i64 net_recv{i64:fd, ptr<i64>:buf, i64:len}(
+    ret syscall{0, fd, buf, len}.
+)
+
+i64 net_close{i64:fd}(
+    ret syscall{3, fd}.
+)
