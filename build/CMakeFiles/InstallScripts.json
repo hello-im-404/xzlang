@@ -1,8 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"/home/user/prog/projects/ended/xzlang/build/cmake_install.cmake",
-		"/home/user/prog/projects/ended/xzlang/build/src/cmake_install.cmake"
-	],
-	"Parallel" : false
-}

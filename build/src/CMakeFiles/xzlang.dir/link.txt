@@ -1,1 +1,0 @@
-/usr/bin/cc -Wl,--dependency-file=CMakeFiles/xzlang.dir/link.d CMakeFiles/xzlang.dir/main.c.o CMakeFiles/xzlang.dir/lexer.c.o CMakeFiles/xzlang.dir/ast.c.o CMakeFiles/xzlang.dir/parser.c.o CMakeFiles/xzlang.dir/eval.c.o CMakeFiles/xzlang.dir/compiler.c.o -o /home/user/prog/projects/ended/xzlang/xzlang
