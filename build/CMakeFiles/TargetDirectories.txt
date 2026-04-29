@@ -1,0 +1,5 @@
+/home/user/prog/projects/ended/xzlang/build/CMakeFiles/edit_cache.dir
+/home/user/prog/projects/ended/xzlang/build/CMakeFiles/rebuild_cache.dir
+/home/user/prog/projects/ended/xzlang/build/src/CMakeFiles/xzlang.dir
+/home/user/prog/projects/ended/xzlang/build/src/CMakeFiles/edit_cache.dir
+/home/user/prog/projects/ended/xzlang/build/src/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,1 @@
+using{"testincludeme/hack_pentaghon"}. i64 start{ntg}( prms{"Result: ~s\n", pentagon{}}. )

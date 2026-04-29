@@ -28,9 +28,17 @@ void load_libraries(ASTNode* ast) {
                 char path[256];
                 const char* lib_name = u->children[j]->token.start + 1;
                 int len = u->children[j]->token.length - 2;
-                snprintf(path, sizeof(path), "lib/%.*s.xzl", len, lib_name);
                 
+                // First try exact path (relative to current directory or absolute)
+                snprintf(path, sizeof(path), "%.*s.xzl", len, lib_name);
                 char* src = read_file(path);
+                
+                // Fallback to /usr/xzlib/ directory (System libraries)
+                if (!src) {
+                    snprintf(path, sizeof(path), "/usr/xzlib/%.*s.xzl", len, lib_name);
+                    src = read_file(path);
+                }
+
                 if (src) {
                     Lexer lib_lexer;
                     lexer_init(&lib_lexer, src);
