@@ -1,6 +1,0 @@
-using{"tml"}.
-using{"my_lib"}.
-
-i64 start{ntg}(
-    prms{"Hello from ~s!\n", get_name{}}.
-)
