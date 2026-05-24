@@ -1,0 +1,31 @@
+i64 sys_write{i64:fd, str:msg, i64:len}(
+    ret syscall{1, fd, msg, len}.
+)
+
+i64 sys_read{i64:fd, ptr<i64>:buf, i64:len}(
+    ret syscall{0, fd, buf, len}.
+)
+
+ntg sys_exit{i64:code}(
+    syscall{60, code}.
+)
+
+i64 sys_open{str:path, i64:flags, i64:mode}(
+    ret syscall{2, path, flags, mode}.
+)
+
+i64 sys_close{i64:fd}(
+    ret syscall{3, fd}.
+)
+
+i64 sys_nanosleep{ptr<i64>:req, ptr<i64>:rem}(
+    ret syscall{35, req, rem}.
+)
+
+i64 sys_mmap{i64:addr, i64:len, i64:prot, i64:flags, i64:fd, i64:offset}(
+    ret syscall{9, addr, len, prot, flags, fd, offset}.
+)
+
+i64 sys_munmap{i64:addr, i64:len}(
+    ret syscall{11, addr, len}.
+)

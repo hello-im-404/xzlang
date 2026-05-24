@@ -1,0 +1,6 @@
+using{"tml"}.
+
+i64 start{ntg}(
+    str:greeting = "Hello, world!".
+    prms{"Message: ~s", ~greeting}.
+)

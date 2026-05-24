@@ -1,0 +1,8 @@
+using {"tml"}.
+
+i64 start{}(
+    for{,,}(
+        prms{"Test"}.
+    )
+    ret 0.
+)
